@@ -1,0 +1,4 @@
+есть ошибки
+./media/userfiles/tests_TLeXL4k.py:1:1: F401 'django.test.TestCase' imported but unused
+
+отправлена информация по почте

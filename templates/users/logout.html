@@ -1,0 +1,12 @@
+{% include 'base.html' %}
+
+{% block content %}
+    <div class="card border-0 align-items-center">
+        <div class="card w-30 mt-4 p-3">
+            <h3>Вы вышли из своей учетной записи</h3>
+            <div class="border-top pt-3">
+                <a href="{% url 'User_Task_list' %}">Главная</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

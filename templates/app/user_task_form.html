@@ -1,0 +1,22 @@
+{% include 'base.html' %}
+
+{% block content %}
+    <div class="card border-0 align-items-center">
+        <div class="card w-25 mt-4 ml-3 p-3">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="card-body">
+                    <button type="submit" class="btn btn-primary">
+                        {% if request.path == '/create_task/' %}
+                            Добавить
+                        {% else %}
+                            Заменить
+                        {% endif %}
+                    </button>
+                    <a href="{% url 'User_Task_list' %}">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

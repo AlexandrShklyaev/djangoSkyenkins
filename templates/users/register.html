@@ -1,0 +1,35 @@
+{% include 'base.html' %}
+
+{% block content %}
+    <div class="card border-0 align-items-center">
+        <div class="card w-30 mt-4 p-3">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_user_name">Пользователь:</label>
+                    <input type="text" class="form-control" name="user_name" maxlength="255" required id="id_user_name"
+                           placeholder="введите эл.почту">
+                </div>
+                <div class="form-group">
+                    <label for="id_email">Эл. почта:</label>
+                    <input type="email" class="form-control" name="email" maxlength="255" required id="id_email"
+                           placeholder="введите эл.почту">
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Ведите пароль:</label>
+                    <input type="password" class="form-control" name="password1" required id="id_password1"
+                           placeholder="введите пароль">
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Подтвердите пароль:</label>
+                    <input type="password" class="form-control" name="password2" required id="id_password2"
+                           placeholder="введите пароль">
+                </div>
+                <div class="card border-0 align-items-center">
+                    <button type="submit" class="btn btn-primary">Регистрация</button>
+                    <a href="{% url 'User_Task_list' %}">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

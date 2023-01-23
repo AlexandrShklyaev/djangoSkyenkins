@@ -1,0 +1,4 @@
+есть ошибки
+'row 1,col 1::error F401::'django.test.TestCase' imported but unused'
+
+отправлена информация по почте

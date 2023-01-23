@@ -1,0 +1,9 @@
+есть ошибки
+./media/userfiles/models_jIEZKsM.py:7:80: E501 line too long (106 > 79 characters)
+./media/userfiles/models_jIEZKsM.py:8:80: E501 line too long (88 > 79 characters)
+./media/userfiles/models_jIEZKsM.py:9:80: E501 line too long (89 > 79 characters)
+./media/userfiles/models_jIEZKsM.py:21:80: E501 line too long (106 > 79 characters)
+./media/userfiles/models_jIEZKsM.py:22:80: E501 line too long (88 > 79 characters)
+./media/userfiles/models_jIEZKsM.py:23:80: E501 line too long (94 > 79 characters)
+
+отправлена информация по почте

@@ -1,0 +1,3 @@
+есть ошибки
+b"./media/userfiles/admin_2lZqyap.py:2:1: F401 'django.http.Http404' imported but unused\n./media/userfiles/admin_2lZqyap.py:12:9: F841 local variable 'ss' is assigned to but never used\n./media/userfiles/admin_2lZqyap.py:14:80: E501 line too long (88 > 79 characters)\n./media/userfiles/admin_2lZqyap.py:21:1: E302 expected 2 blank lines, found 1\n./media/userfiles/admin_2lZqyap.py:23:31: E231 missing whitespace after ','\n./media/userfiles/admin_2lZqyap.py:25:44: W292 no newline at end of file\n"
+отправлена информация по почте
