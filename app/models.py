@@ -20,8 +20,9 @@ class User_Task(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        related_name="ads",
     )
-    user_file = models.FileField(upload_to="userfiles/", verbose_name="",
+    user_file = models.FileField(upload_to="userfiles/", verbose_name="Python-файл",
                                  validators=[FileExtensionValidator(allowed_extensions=['py', ])])
     file_name = models.CharField(max_length=50, default='file.py')
     file_status = models.CharField(max_length=8, choices=File_Statuses.choices, default=File_Statuses.NEW)

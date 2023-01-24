@@ -3,7 +3,7 @@
 {% block content %}
     <div class="card border-0 align-items-center">
         <div class="card w-25 mt-4 ml-3 p-3">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="card-body">
