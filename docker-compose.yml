@@ -1,5 +1,8 @@
 version: '3.9'
 
+networks:
+  default: {}
+
 services:
 
   postgres:
@@ -11,6 +14,8 @@ services:
       - ./pgdata:/var/lib/postgresql/data/
     env_file:
       - ./.env
+    networks:
+      - default
 
   redis:
     container_name: 'redis'
@@ -18,6 +23,8 @@ services:
     image: redis
     ports:
       - 6379:6379
+    networks:
+      - default
 
   app:
     container_name: 'application'
@@ -36,6 +43,8 @@ services:
       - 8000:8000
     depends_on:
       - postgres
+    networks:
+      - default
 
   celery_beat:
     container_name: 'celery_beat'
@@ -48,6 +57,8 @@ services:
     depends_on:
       - app
       - redis
+    networks:
+      - default
 
 volumes:
   pdata: { }
