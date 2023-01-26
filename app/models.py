@@ -24,7 +24,7 @@ class User_Task(models.Model):
     )
     user_file = models.FileField(upload_to="userfiles/", verbose_name="Python-файл",
                                  validators=[FileExtensionValidator(allowed_extensions=['py', ])])
-    file_name = models.CharField(max_length=50, default='file.py')
+    file_name = models.CharField(max_length=50, default='file.py') # чтоб корямбы не показывать на сайте = имя файла
     file_status = models.CharField(max_length=8, choices=File_Statuses.choices, default=File_Statuses.NEW)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -35,7 +35,7 @@ class User_Task(models.Model):
     def delete(self, *args, **kwargs):
         storage, path = self.user_file.storage, self.user_file.path
         log_file = '.' + settings.MEDIA_URL + 'file_logs/' + str(self.pk)
-        open(log_file, 'w').close()
+        open(log_file, 'w').close() # стираем содержимое лога
 
         super().delete(*args, **kwargs)
         storage.delete(path)

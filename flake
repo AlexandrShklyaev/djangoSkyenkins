@@ -1,4 +1,0 @@
-
-flake8 media/userfiles\urls.py --output-file=output.txt --format='%(path)s::"row "%(row)d,"col "%(col)d::"error "%(code)s::%(text)s'
-
-celery -A djangoSkyenkins worker -l INFO -P eventlet

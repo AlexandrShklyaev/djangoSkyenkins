@@ -24,7 +24,13 @@ SECRET_KEY = "django-insecure-m3w1&(ywrp$k&#_ra=h=34nvn^u8x0%!3j*noea936%1moa_4j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "0.0.0.0"]
+
+if os.environ.get("ALLOWED_HOSTS") is not None:
+    try:
+        ALLOWED_HOSTS += os.environ.get("ALLOWED_HOSTS").split(",")
+    except Exception as e:
+        print("Cant set ALLOWED_HOSTS, using default instead")
 
 # Application definition
 
@@ -75,16 +81,37 @@ WSGI_APPLICATION = "djangoSkyenkins.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'my_bd',
-        'USER': 'postgres',
-        'PASSWORD': 'Atl@nt1da',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'my_bd',
+#         'USER': 'postgres',
+#         'PASSWORD': 'Atl@nt1da',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+#
+DB_SQLITE = "sqlite"
+DB_POSTGRESQL = "postgresql"
+
+DATABASES_ALL = {
+    DB_SQLITE: {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    },
+    DB_POSTGRESQL: {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "NAME": os.environ.get("POSTGRES_NAME", "my_bd"),
+        "USER": os.environ.get("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "Atl@nt1da"),
+        "PORT": int(os.environ.get("POSTGRES_PORT", "5432")),
+    },
 }
+
+DATABASES = {"default": DATABASES_ALL[os.environ.get("DJANGO_DB", DB_POSTGRESQL)]}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -138,8 +165,8 @@ LOGIN_URL = 'login'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'upravbal@gmail.com'
-EMAIL_HOST_PASSWORD = 'eolenslhcyblmqpc'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", ' ')
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD",' ')
 EMAIL_PORT = 587
 
 # EMAIL_HOST='smtp.yandex.ru'
@@ -152,16 +179,7 @@ EMAIL_PORT = 587
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = '6379'
-
-CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
+CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379/0")
 
 CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'

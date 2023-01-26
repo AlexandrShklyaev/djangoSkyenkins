@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    container_name: 'postgres'
+    image: postgres:14.0
+    ports:
+      - 5433:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+  redis:
+    container_name: 'redis'
+    restart: always
+    image: redis
+    ports:
+      - 6379:6379
+
+  app:
+    container_name: 'application'
+    restart: always
+    build:
+      context: .
+    volumes:
+      - ./:/app
+    env_file:
+      - ./.env
+    command:
+      sh -c "python manage.py migrate
+      && python manage.py start_tt
+      && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+
+  celery_beat:
+    container_name: 'celery_beat'
+    build:
+      context: .
+    env_file: '.env'
+    command: celery -A djangoSkyenkins worker --beat --scheduler django --loglevel=info
+    volumes_from:
+      - app
+    depends_on:
+      - app
+      - redis
+
+volumes:
+  pdata: { }
+  app: { }
+  worker: { }
+  celery-beat: { }

@@ -2,16 +2,19 @@ from celery import shared_task
 
 from django.core.mail import send_mail
 import subprocess
+
+from django.db.models import Q
+
 from app.models import User_Task, File_Statuses
 from django.conf import settings
 
 
-
 @shared_task(name="repeat_tasks_make")
-def repeat_tasks_make():
-    u_tasks = User_Task.objects.all().filter(file_status=File_Statuses.NEW)
+def repeat_tasks_make():  # найдем задачи с нужными статусами
+    u_tasks = User_Task.objects.all().filter(Q(file_status=File_Statuses.NEW) | Q(file_status=File_Statuses.RELOAD))
     for one_tsk in u_tasks:
-      send_on_email.delay(one_tsk.user_file.url, one_tsk.author.email, one_tsk.user_file.name, one_tsk.pk)
+        send_on_email.delay(one_tsk.user_file.url, one_tsk.author.email, one_tsk.user_file.name, one_tsk.pk)
+
 
 def get_flake(filename):
     l_form = "--format='" + '" row "%(row)d:" "[%(code)s]" "%(text)s' + "'"
