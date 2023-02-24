@@ -8,4 +8,7 @@ urlpatterns = [
     path("update_task/<int:pk>/", views.Update_Task_View.as_view(), name='update_task'),
     path("delete_task/<int:pk>/", views.Delete_Task_View.as_view(), name='delete_task'),
 
+    path("api/files/", views.List_ApiView.as_view()),
+    path("api/files/<int:pk>/", views.Detail_ApiView.as_view()),
+
 ]
