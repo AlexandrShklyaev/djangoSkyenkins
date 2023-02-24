@@ -1,10 +1,12 @@
-from django.shortcuts import redirect
-from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.conf import settings
+from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied
+from rest_framework.response import Response
 
-from app.forms import VeiwForm
 from app.models import User_Task, File_Statuses
+from app.serializers import User_Task_Serializer, List_User_Task_Serializer
+
 
 class ViewData(ListView):
     model = User_Task
@@ -34,6 +36,7 @@ class Create_Task_View(CreateView):
     model = User_Task
     success_url = "/"
     fields = ('user_file',)
+
     # form_class = VeiwForm
 
     def form_valid(self, form):
@@ -63,16 +66,42 @@ class Update_Task_View(UpdateView):
 
         return super().form_valid(form)
 
-    # def get_success_url(self):
-    #     if self.u_filename:
-    #         log_file = '.' + settings.MEDIA_URL + 'file_logs/' + str(self.object.pk)
-    #         with open(log_file, 'a', encoding='UTF-8') as f:
-    #             f.write("файл был заменен\n")
-    #         # send_on_email.delay(self.object.user_file.url, self.u_email, self.u_filename, self.object.pk)
-    #
-    #     return super().get_success_url()
-
 
 class Delete_Task_View(DeleteView):
     model = User_Task
     success_url = "/"
+
+# тут доп. задание на DRF
+class List_ApiView(ListAPIView):
+    queryset = User_Task.objects.all()
+    serializer_class = List_User_Task_Serializer
+
+    def get_queryset(self):
+        if not self.request.user.is_anonymous:
+            view_data = super().get_queryset().filter(author__exact=self.request.user)
+        else:
+            raise NotAuthenticated()
+        return view_data
+
+
+class Detail_ApiView(RetrieveAPIView, UpdateAPIView):
+    queryset = User_Task.objects.all()
+    serializer_class = User_Task_Serializer
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            raise NotAuthenticated()
+        obj = super().get_queryset().filter(author__exact=self.request.user, pk__exact=self.kwargs["pk"])
+        if len(obj):
+            return obj
+        else:
+            raise PermissionDenied()  # нет прав на чужие файлы
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj:
+            obj.file_status = File_Statuses.RELOAD
+            obj.save()
+            return Response({"result": "ok", "message": "file under testing"}, status=200)
+        else:
+            return Response({"result": "failed", "message": "have no access to this file"}, status=403)
